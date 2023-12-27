@@ -4,7 +4,7 @@ import { SquareStack, Search, Sun, Moon, Youtube, Twitch } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useTheme } from "@/context/theme-provider"
+import { useTheme } from "@/context/themeProvider"
 import { SelectGroup } from "@radix-ui/react-select";
 
 function Header() {
