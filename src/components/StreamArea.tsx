@@ -1,24 +1,47 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import SingleView from "./SingleView"
-import MultiView from "./MultiView"
+import DoubleView from "./DoubleView"
+import TripleView from "./TripleView"
+import QuadView from "./QuadView"
 import { useState } from "react"
+import { useStream } from '@/context/streamContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select"
 
 function StreamArea() {
     const [activeTab, setActiveTab] = useState("single-view")
+    const { setViewScreen } = useStream();
+
     return (
         <>
             <div className="flex w-full flex-col px-2 py-3 gap-2">
-                <div className="flex">
+                <div className="flex gap-3">
                     <Tabs defaultValue="single-view" onValueChange={(value) => setActiveTab(value)}>
                         <TabsList>
                             <TabsTrigger value="single-view">Single View</TabsTrigger>
-                            <TabsTrigger value="multi-view">Multi View</TabsTrigger>
+                            <TabsTrigger value="double-view">Double View</TabsTrigger>
+                            <TabsTrigger value="triple-view">Triple View</TabsTrigger>
+                            <TabsTrigger value="quad-view">Quad View</TabsTrigger>
                         </TabsList>
                     </Tabs>
+                    <Select defaultValue="1" onValueChange={(value) => setViewScreen(value)}>
+                    <SelectTrigger className="w-auto">
+                        <SelectValue placeholder="View"/>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem value="1" className="text-sm">1</SelectItem>
+                            {(activeTab === "double-view" || activeTab === "triple-view" || activeTab === "quad-view") && <SelectItem value="2" className="text-sm">2</SelectItem>}
+                            {(activeTab === "triple-view" || activeTab === "quad-view") && <SelectItem value="3" className="text-sm">3</SelectItem>}
+                            {activeTab === "quad-view" && <SelectItem value="4" className="text-sm">4</SelectItem>}
+                        </SelectGroup>
+                    </SelectContent>
+                    </Select>
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-6">
                     {activeTab === "single-view" && <SingleView />}
-                    {activeTab === "multi-view" && <MultiView/>}
+                    {activeTab === "double-view" && <DoubleView/>}
+                    {activeTab === "triple-view" && <TripleView/>}
+                    {activeTab === "quad-view" && <QuadView/>}
                 </div>
             </div>
         </>
