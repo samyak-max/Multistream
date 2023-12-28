@@ -5,8 +5,8 @@ import StreamBox from "./StreamBox"
 function TripleView() {
   const { stream1, stream2, stream3 } = useStream();
   return (
-    <div className='flex gap-3 flex-col'>
-      <div className="flex">
+    <div className='flex gap-3 flex-col w-full'>
+      <div className="flex w-full">
         <StreamBox streamId={stream1.streamId} streamPlatform={stream1.platform} chat={true}/>
       </div>
       <div className="grid grid-cols-2 gap-4 w-full">
