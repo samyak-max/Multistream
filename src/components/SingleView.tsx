@@ -1,9 +1,11 @@
 import StreamBox from "./StreamBox"
+import { useStream } from '@/context/streamContext';
 
 function SingleView() {
+  const { stream1 } = useStream();
   return (
-    <div className="flex w-[900px]">
-      <StreamBox screenId="1" chat={true}/>
+    <div className="flex">
+      <StreamBox streamId={stream1.streamId} streamPlatform={stream1.platform} chat={true}/>
     </div>
   )
 }

@@ -1,13 +1,15 @@
 import StreamBox from "./StreamBox"
+import { useStream } from '@/context/streamContext';
 
 function DoubleView() {
+  const { stream1, stream2 } = useStream();
   return (
-    <div className="flex gap-8">
-      <div className="flex w-[600px]">
-        <StreamBox screenId="1" chat={true}/>
+    <div className="grid grid-cols-2 gap-4 w-full">
+      <div className="flex">
+        <StreamBox streamId={stream1.streamId} streamPlatform={stream1.platform} chat={false}/>
       </div>
-      <div className="flex w-[600px]">
-        <StreamBox screenId="2" chat={true}/>
+      <div className="flex">
+        <StreamBox streamId={stream2.streamId} streamPlatform={stream2.platform} chat={false}/>
       </div>
     </div>
   )

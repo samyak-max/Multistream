@@ -1,21 +1,46 @@
 import { createContext, useContext } from "react";
 
-type StreamContextType = {
+type StreamScreenContextType = {
     platform: string;
     streamId: string;
-    viewScreen: string;
-    setPlatform: (newPlatform: string) => void;
-    setStreamId: (newStreamId: string) => void;
-    setViewScreen: (newViewScreen: string) => void;
+}
+
+type StreamContextType = {
+    stream1: StreamScreenContextType;
+    stream2: StreamScreenContextType;
+    stream3: StreamScreenContextType;
+    stream4: StreamScreenContextType;
+    streamScreen: string;
+    setStream1: (platform: string, streamId: string) => void;
+    setStream2: (platform: string, streamId: string) => void;
+    setStream3: (platform: string, streamId: string) => void;
+    setStream4: (platform: string, streamId: string) => void;
+    setStreamScreen: (streamScreen: string) => void;
 }
 
 const initialState = {
-    platform: "",
-    streamId: "",
-    viewScreen: "1",
-    setPlatform: () => {},
-    setStreamId: () => {},
-    setViewScreen: () => {},
+    stream1: {
+        platform: "",
+        streamId: "",
+    },
+    stream2: {
+        platform: "",
+        streamId: "",
+    },
+    stream3: {
+        platform: "",
+        streamId: "",
+    },
+    stream4: {
+        platform: "",
+        streamId: "",
+    },
+    streamScreen: "",
+    setStream1: () => {},
+    setStream2: () => {},
+    setStream3: () => {},
+    setStream4: () => {},
+    setStreamScreen: () => {},
 }
 
 const StreamContext = createContext<StreamContextType | null>(initialState);

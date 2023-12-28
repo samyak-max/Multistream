@@ -4,7 +4,11 @@ import { SquareStack, Search, Sun, Moon, Youtube, Twitch } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useTheme } from "@/context/themeProvider"  
+import YouTubeSection from "./YouTubeSection"
+import TwitchSection from "./TwitchSection"
+import { Separator } from "@/components/ui/separator"
 
 function Header() {
     const { setTheme } = useTheme();
@@ -12,7 +16,29 @@ function Header() {
     const [search, setSearch] = useState("");
     return (
         <div className="flex justify-between items-center px-6 py-3">
-            <SquareStack />
+            <Sheet>
+            <SheetTrigger asChild>
+                <Button variant="outline" size="icon"><SquareStack /></Button>
+            </SheetTrigger>
+            <SheetContent side={"left"}>
+                <SheetHeader>
+                <SheetTitle>MultiStream</SheetTitle>
+                <SheetDescription>
+                    Channels Appear Once You Login.
+                </SheetDescription>
+                </SheetHeader>
+                <div className="flex flex-col gap-3 w-full mt-6">
+                    <div className="">
+                        <YouTubeSection/>
+                    </div>
+                    <Separator/>  
+                    <div className="w-full">
+                        <TwitchSection/>
+                    </div>    
+                </div> 
+            </SheetContent>
+            </Sheet>
+
             <div className="flex gap-2">
             <Select defaultValue="youtube" onValueChange={(value) => setSelected(value)}>
             <SelectTrigger className="w-auto">

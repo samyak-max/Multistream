@@ -9,11 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGr
 
 function StreamArea() {
     const [activeTab, setActiveTab] = useState("single-view")
-    const { setViewScreen } = useStream();
+    const { setStreamScreen } = useStream();
 
     return (
         <>
-            <div className="flex w-full flex-col px-2 py-3 gap-2">
+            <div className="flex w-full flex-col px-10 py-3 gap-2">
                 <div className="flex gap-3">
                     <Tabs defaultValue="single-view" onValueChange={(value) => setActiveTab(value)}>
                         <TabsList>
@@ -23,7 +23,7 @@ function StreamArea() {
                             <TabsTrigger value="quad-view">Quad View</TabsTrigger>
                         </TabsList>
                     </Tabs>
-                    <Select defaultValue="1" onValueChange={(value) => setViewScreen(value)}>
+                    <Select defaultValue="1" onValueChange={(value) => setStreamScreen(value)}>
                     <SelectTrigger className="w-auto">
                         <SelectValue placeholder="View"/>
                     </SelectTrigger>

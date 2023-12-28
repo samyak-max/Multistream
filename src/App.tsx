@@ -1,13 +1,12 @@
 import './App.css'
 import Header from './components/Header'
-import { Separator } from "@/components/ui/separator"
-import LeftPanel from './components/LeftPanel'
 import StreamArea from './components/StreamArea'
 import { OAuthProvider } from './context/oAuthProvider'
 import { StreamProvider } from './context/streamContext'
 import { useState } from 'react'
 
 function App() {
+  // oAuth Context
   const [twitchState, updateTwitchState] = useState({
     twitchToken: "",
     twitchUserId: ""
@@ -16,38 +15,55 @@ function App() {
     youtubeToken: "",
     youtubeUserId: ""
   })
-  const [platform, updatePlatform] = useState("");
-  const [streamId, updateStreamId] = useState("");
-  const [viewScreen, updateViewScreen] = useState("1");
   const setTwitchState = (newState: any) => {
     updateTwitchState(newState)
   }
   const setYoutubeState = (newState: any) => {
     updateYoutubeState(newState)
   }
-  const setPlatform = (newPlatform: string) => {
-    updatePlatform(newPlatform)
+
+  // Stream Context
+  const [stream1, updateStream1] = useState({
+    streamId: "",
+    platform: ""
+  })
+  const [stream2, updateStream2] = useState({
+    streamId: "",
+    platform: ""
+  })
+  const [stream3, updateStream3] = useState({
+    streamId: "",
+    platform: ""
+  })
+  const [stream4, updateStream4] = useState({
+    streamId: "",
+    platform: ""
+  })
+  const [streamScreen, updateStreamScreen] = useState("1")
+  const setStream1 = (streamId: string, platform: string) => {
+    updateStream1({streamId, platform})
   }
-  const setStreamId = (newStreamId: string) => {
-    updateStreamId(newStreamId)
+  const setStream2 = (streamId: string, platform: string) => {
+    updateStream2({streamId, platform})
   }
-  const setViewScreen = (newViewScreen: string) => {
-    updateViewScreen(newViewScreen)
+  const setStream3 = (streamId: string, platform: string) => {
+    updateStream3({streamId, platform})
   }
+  const setStream4 = (streamId: string, platform: string) => {
+    updateStream4({streamId, platform})
+  }
+  const setStreamScreen = (screen: string) => {
+    updateStreamScreen(screen)
+  }
+
   return (
     <>
       <OAuthProvider value={{twitchState, youtubeState, setTwitchState, setYoutubeState}}>
-      <StreamProvider value={{platform, streamId, viewScreen, setPlatform, setStreamId, setViewScreen}}>
-      <Header/>
-      <div className="flex">
-        <div className='flex w-1/6'>
-          <LeftPanel/>
+      <StreamProvider value={{stream1, stream2, stream3, stream4, streamScreen, setStream1, setStream2, setStream3, setStream4, setStreamScreen}}>
+        <Header/>
+        <div className="flex">
+            <StreamArea/> 
         </div>
-        <Separator orientation="vertical"/>
-        <div className='flex w-5/6'>
-          <StreamArea/>
-        </div>
-      </div>
       </StreamProvider>
       </OAuthProvider>
     </>

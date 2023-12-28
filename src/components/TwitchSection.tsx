@@ -12,7 +12,7 @@ const twitchSupabase = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', 
 
 function TwitchSection() {
   const { twitchState, setTwitchState } = useOAuth();
-  const { setPlatform, setStreamId } = useStream();
+  const { setStream1, setStream2, setStream3, setStream4, streamScreen } = useStream();
   const [loading, setLoading] = useState(true);
   const [twitchChannels, setTwitchChannels] = useState<any[]>([]);
 
@@ -57,6 +57,18 @@ function TwitchSection() {
     console.log("Signed Out!", error);
   }
 
+  const updateStream = (streamId: string, platform: string) => {
+    if (streamScreen === "1") {
+      setStream1(streamId, platform);
+    } else if (streamScreen === "2") {
+      setStream2(streamId, platform);
+    } else if (streamScreen === "3") {
+      setStream3(streamId, platform);
+    } else if (streamScreen === "4") {
+      setStream4(streamId, platform);
+    }
+  }
+
   return (
     <>
       <div className="flex gap-2 flex-col">
@@ -79,10 +91,7 @@ function TwitchSection() {
                       <Button 
                         className='w-full flex justify-start gap-2 h-full items-center border-0 py-1' 
                         variant="outline"
-                        onClick={() => {
-                          setPlatform("twitch");
-                          setStreamId(channel.login);
-                        }}
+                        onClick={() => updateStream(channel.login, "twitch")}
                       >
                         <Avatar>
                           <AvatarImage src={channel.profile_image_url} />
