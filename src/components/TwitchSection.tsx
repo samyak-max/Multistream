@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { createClient } from '@supabase/supabase-js'
 import { useEffect, useState } from "react";
 import { useOAuth } from "@/context/oAuthProvider";
-import twitchAPIHandler from "../app/features/twitchAPI";
+import twitchAPIHandler from "../app/features/twitchStreamAPI";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useStream } from '@/context/streamContext';
 
-const twitchSupabase = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZsa3dnYWF0Y3ltZHV2d251aG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDM1MjM4NTksImV4cCI6MjAxOTA5OTg1OX0.aeZTX5vtgMDjWrlOvoCnuqVxPICryGxZlKX8-wkLdPs')
+const anon_key = import.meta.env.VITE_SUPABASE_ANON_KEY
+const twitchSupabase = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', anon_key || '')
 
 function TwitchSection() {
   const { twitchState, setTwitchState } = useOAuth();
@@ -95,7 +96,7 @@ function TwitchSection() {
                       >
                         <Avatar>
                           <AvatarImage src={channel.profile_image_url} />
-                          <AvatarFallback>X</AvatarFallback>
+                          <AvatarFallback>U</AvatarFallback>
                         </Avatar>
                         <div className="text-base">{channel.display_name}</div>
                       </Button>

@@ -1,8 +1,8 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import SingleView from "./SingleView"
-import DoubleView from "./DoubleView"
-import TripleView from "./TripleView"
-import QuadView from "./QuadView"
+import SingleView from "./ScreenViews/SingleView"
+import DoubleView from "./ScreenViews/DoubleView"
+import TripleView from "./ScreenViews/TripleView"
+import QuadView from "./ScreenViews/QuadView"
 import { useState } from "react"
 import { useStream } from '@/context/streamContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select"

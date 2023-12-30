@@ -8,13 +8,13 @@ type Props = {
     chat: boolean
 }
 
-function StreamBox({streamId, streamPlatform ,chat}: Props) {
+function StreamBox({streamId, streamPlatform, chat }: Props) {
     const twitchEndpoint = "https://www.twitch.tv/"+streamId;
     // console.log(twitchEndpoint);
     return (
-        <div className={`h-full w-full min-h-[500px] shadow-2xl ${streamPlatform === "twitch" ? 'shadow-[0px_0px_30px_0px_rgba(145,70,255,1);]' : streamPlatform === "youtube" ? 'shadow-[0px_0px_30px_0px_rgba(205,32,31,1);]' : ' shadow-[0px_0px_30px_0px_rgba(170,255,0,1);]'}`}>
+        <div className={`h-full w-full shadow-2xl ${streamPlatform === "twitch" ? 'shadow-[0px_0px_30px_0px_rgba(145,70,255,1);]' : streamPlatform === "youtube" ? 'shadow-[0px_0px_30px_0px_rgba(205,32,31,1);]' : ' shadow-[0px_0px_30px_0px_rgba(170,255,0,1);]'}`}>
             {streamPlatform === "" &&
-                <Skeleton className='w-full h-[500px]'/>
+                <Skeleton className={`w-full h-full`}/>
             }
             {streamPlatform === "twitch" && (
                 <div className='grid grid-cols-4 h-full'>
