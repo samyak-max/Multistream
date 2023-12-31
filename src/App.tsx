@@ -3,6 +3,7 @@ import Header from './components/Header'
 import StreamArea from './components/StreamArea'
 import { OAuthProvider } from './context/oAuthProvider'
 import { StreamProvider } from './context/streamContext'
+import { TopStreamProvider } from './context/topStreamContext'
 import { useState } from 'react'
 
 function App() {
@@ -56,14 +57,33 @@ function App() {
     updateStreamScreen(screen)
   }
 
+  // Top Stream Context
+  const [topTwitchStreams, updateTopTwitchStreams] = useState<object[]>([]);
+  const [topYoutubeStreams, updateTopYoutubeStreams] = useState<object[]>([]);
+  const [twitchLoading, updateTwitchLoading] = useState(true);
+  const [youtubeLoading, updateYoutubeLoading] = useState(true);
+  const setTopTwitchStreams = (streams: object[]) => {
+    updateTopTwitchStreams(streams)
+  }
+  const setTopYoutubeStreams = (streams: object[]) => {
+    updateTopYoutubeStreams(streams)
+  }
+  const setTwitchLoading = (loading: boolean) => {
+    updateTwitchLoading(loading)
+  }
+  const setYoutubeLoading = (loading: boolean) => {
+    updateYoutubeLoading(loading)
+  }
   return (
     <>
       <OAuthProvider value={{twitchState, youtubeState, setTwitchState, setYoutubeState}}>
       <StreamProvider value={{stream1, stream2, stream3, stream4, streamScreen, setStream1, setStream2, setStream3, setStream4, setStreamScreen}}>
+      <TopStreamProvider value={{topTwitchStreams, topYoutubeStreams, twitchLoading, youtubeLoading, setTopTwitchStreams, setTopYoutubeStreams, setTwitchLoading, setYoutubeLoading}}>
         <Header/>
         <div className="flex">
             <StreamArea/> 
         </div>
+      </TopStreamProvider>
       </StreamProvider>
       </OAuthProvider>
     </>

@@ -3,11 +3,20 @@ import axios, { AxiosResponse } from 'axios';
 const validateURL = "https://id.twitch.tv/oauth2/validate";
 const followed_endpoint = "https://api.twitch.tv/helix/channels/followed?user_id=";
 const channel_endpoint = "https://api.twitch.tv/helix/users";
+const top_streams_endpoint = "https://api.twitch.tv/helix/streams?type=live&first=15";
+
+type TwitchType = {
+    twitchChannels: object[],
+    twitchTopStreams: object[]
+}
 
 export default async function twitchAPIHandler(
     req: any
     ) {
-    let twitchChannels: Object[] = [];
+    let twitch: TwitchType = {
+        twitchChannels: [],
+        twitchTopStreams: []
+    };
     const token = req.twitchToken;
     try {
         const response = await axios.get(validateURL, {
@@ -39,7 +48,21 @@ export default async function twitchAPIHandler(
                 }
             })
             .then((response: AxiosResponse) => {
-            twitchChannels = response.data.data;
+            twitch.twitchChannels = response.data.data;
+            });
+        }
+        catch (error) {
+            console.log("Client Id invalid", error);
+        }
+        try {
+            await axios.get(top_streams_endpoint, {
+                headers: {
+                    'Authorization': "Bearer " + token,
+                    'Client-Id': response.data.client_id
+                }
+            })
+            .then((response: AxiosResponse) => {
+                twitch.twitchTopStreams = response.data.data;
             });
         }
         catch (error) {
@@ -48,5 +71,5 @@ export default async function twitchAPIHandler(
     } catch (error) {
         console.log("Session token invalid", error);
     }
-    return twitchChannels;
+    return twitch;
 }

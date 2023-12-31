@@ -7,6 +7,7 @@ import twitchAPIHandler from "../app/features/twitchStreamAPI";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useStream } from '@/context/streamContext';
+import { useTopStream } from '@/context/topStreamContext';
 
 const anon_key = import.meta.env.VITE_SUPABASE_ANON_KEY
 const twitchSupabase = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', anon_key || '')
@@ -14,7 +15,7 @@ const twitchSupabase = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', 
 function TwitchSection() {
   const { twitchState, setTwitchState } = useOAuth();
   const { setStream1, setStream2, setStream3, setStream4, streamScreen } = useStream();
-  const [loading, setLoading] = useState(true);
+  const { setTopTwitchStreams, setTwitchLoading, twitchLoading } = useTopStream();
   const [twitchChannels, setTwitchChannels] = useState<any[]>([]);
 
   useEffect(() => {
@@ -38,8 +39,9 @@ function TwitchSection() {
     if (twitchState.twitchToken && twitchState.twitchUserId && !twitchChannels?.length) {
       twitchAPIHandler(twitchState)
         .then((res) => {
-          setTwitchChannels(res);
-          setLoading(false);
+          setTwitchChannels(res.twitchChannels);
+          setTopTwitchStreams(res.twitchTopStreams);
+          setTwitchLoading(false);
         });
     }
   }, [twitchState.twitchToken, twitchState.twitchUserId])
@@ -81,7 +83,7 @@ function TwitchSection() {
             {/* <Button variant="outline" onClick={() => {console.log(twitchState);twitchAPIHandler(twitchState)}} size="icon"><Link /></Button> */}
         </div>
         <div>
-          {loading ? (
+          {twitchLoading ? (
             <div>Loading...</div>
           ) : (
             <div>
@@ -96,7 +98,7 @@ function TwitchSection() {
                       >
                         <Avatar>
                           <AvatarImage src={channel.profile_image_url} />
-                          <AvatarFallback>U</AvatarFallback>
+                          <AvatarFallback>X</AvatarFallback>
                         </Avatar>
                         <div className="text-base">{channel.display_name}</div>
                       </Button>
