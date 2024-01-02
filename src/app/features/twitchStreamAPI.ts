@@ -46,9 +46,10 @@ export default async function twitchAPIHandler(
                     'Authorization': "Bearer " + token,
                     'Client-Id': clientId
                 }
-            })
+            })  
             .then((response: AxiosResponse) => {
-            twitch.twitchChannels = response.data.data;
+                twitch.twitchChannels = response.data.data;
+                console.log(twitch.twitchChannels);
             });
         }
         catch (error) {

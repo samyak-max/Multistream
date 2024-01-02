@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { SquareStack, Search, Sun, Moon, Youtube, Twitch } from 'lucide-react';
 import { Button } from "@/components/ui/button"
@@ -9,11 +9,64 @@ import { useTheme } from "@/context/themeProvider"
 import YouTubeSection from "./YouTubeSection"
 import TwitchSection from "./TwitchSection"
 import { Separator } from "@/components/ui/separator"
+import { createClient } from '@supabase/supabase-js'
+import { useOAuth } from "@/context/oAuthProvider";
+import twitchAPIHandler from "../app/features/twitchStreamAPI";
+import { useTopStream } from '@/context/topStreamContext';
+
+const anon_key = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseClient = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', anon_key || '')
 
 function Header() {
     const { setTheme } = useTheme();
     const [selected, setSelected] = useState("youtube");
     const [search, setSearch] = useState("");
+
+    const { twitchState, setTwitchState } = useOAuth();
+    const { setTopTwitchStreams, setTwitchLoading } = useTopStream();
+    const [twitchChannels, setTwitchChannels] = useState<any[]>([]);
+
+    useEffect(() => {
+        const subscription = supabaseClient.auth.onAuthStateChange(
+        (event, session) => {   
+            if (event === 'SIGNED_OUT') {
+            setTwitchState({ twitchToken: "", twitchUserId: "" })
+            } else if (session) {
+            setTwitchState({ twitchToken: session.provider_token, twitchUserId: session.user.identities?.[0]?.id ?? '' })
+            }
+        })
+
+        return () => {
+        subscription.data?.subscription.unsubscribe()
+        }
+    }, [])
+    
+
+    useEffect(() => {
+        if (twitchState.twitchToken && twitchState.twitchUserId && !twitchChannels?.length) {
+        twitchAPIHandler(twitchState)
+            .then((res) => {
+            setTwitchChannels(res.twitchChannels);
+            setTopTwitchStreams(res.twitchTopStreams);
+            setTwitchLoading(false);
+            });
+        }
+    }, [twitchState.twitchToken, twitchState.twitchUserId])
+
+    async function signInWithTwitch() {
+        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+          provider: 'twitch',
+          options: {
+            scopes: "openid user:read:email user:read:follows"
+          }
+        })
+        console.log(data, error)
+    }
+    async function signOutWithTwitch() {
+        const { error } = await supabaseClient.auth.signOut()
+        console.log("Signed Out!", error);
+    }
+
     return (
         <div className="flex justify-between items-center px-6 py-3">
             <Sheet>
@@ -33,7 +86,7 @@ function Header() {
                     </div>
                     <Separator/>  
                     <div className="w-full">
-                        <TwitchSection/>
+                        <TwitchSection signInWithTwitch={signInWithTwitch} signOutWithTwitch={signOutWithTwitch} twitchChannels={twitchChannels}/>
                     </div>    
                 </div> 
             </SheetContent>

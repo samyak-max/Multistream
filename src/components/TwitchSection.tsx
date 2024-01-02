@@ -1,64 +1,19 @@
 import { Twitch, Link } from 'lucide-react'; 
 import { Button } from "@/components/ui/button";
-import { createClient } from '@supabase/supabase-js'
-import { useEffect, useState } from "react";
-import { useOAuth } from "@/context/oAuthProvider";
-import twitchAPIHandler from "../app/features/twitchStreamAPI";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useStream } from '@/context/streamContext';
 import { useTopStream } from '@/context/topStreamContext';
 
-const anon_key = import.meta.env.VITE_SUPABASE_ANON_KEY
-const twitchSupabase = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', anon_key || '')
+type TwitchSectionProps = {
+  signInWithTwitch: () => void;
+  signOutWithTwitch: () => void;
+  twitchChannels: any[];
+}
 
-function TwitchSection() {
-  const { twitchState, setTwitchState } = useOAuth();
+function TwitchSection({signInWithTwitch, signOutWithTwitch, twitchChannels}: TwitchSectionProps) {
   const { setStream1, setStream2, setStream3, setStream4, streamScreen } = useStream();
-  const { setTopTwitchStreams, setTwitchLoading, twitchLoading } = useTopStream();
-  const [twitchChannels, setTwitchChannels] = useState<any[]>([]);
-
-  useEffect(() => {
-    const subscription = twitchSupabase.auth.onAuthStateChange(
-      (event, session) => {
-        // console.log(event, session)
-        if (event === 'SIGNED_OUT') {
-          setTwitchState({ twitchToken: "", twitchUserId: "" })
-        } else if (session) {
-          setTwitchState({ twitchToken: session.provider_token, twitchUserId: session.user.identities?.[0]?.id ?? '' })
-        }
-      })
-
-    return () => {
-      subscription.data?.subscription.unsubscribe()
-    }
-  }, [])
-  
-
-  useEffect(() => {
-    if (twitchState.twitchToken && twitchState.twitchUserId && !twitchChannels?.length) {
-      twitchAPIHandler(twitchState)
-        .then((res) => {
-          setTwitchChannels(res.twitchChannels);
-          setTopTwitchStreams(res.twitchTopStreams);
-          setTwitchLoading(false);
-        });
-    }
-  }, [twitchState.twitchToken, twitchState.twitchUserId])
-
-  async function signInWithTwitch() {
-    const { data, error } = await twitchSupabase.auth.signInWithOAuth({
-      provider: 'twitch',
-      options: {
-        scopes: "openid user:read:email user:read:follows"
-      }
-    })
-    console.log(data, error)
-  }
-  async function signOutWithTwitch() {
-    const { error } = await twitchSupabase.auth.signOut()
-    console.log("Signed Out!", error);
-  }
+  const { twitchLoading } = useTopStream();
 
   const updateStream = (streamId: string, platform: string) => {
     if (streamScreen === "1") {
@@ -96,11 +51,11 @@ function TwitchSection() {
                         variant="outline"
                         onClick={() => updateStream(channel.login, "twitch")}
                       >
-                        <Avatar>
-                          <AvatarImage src={channel.profile_image_url} />
-                          <AvatarFallback>X</AvatarFallback>
-                        </Avatar>
-                        <div className="text-base">{channel.display_name}</div>
+                      <Avatar>
+                        <AvatarImage src={channel.profile_image_url} />
+                        <AvatarFallback>X</AvatarFallback>
+                      </Avatar>
+                      <div className="text-base">{channel.display_name}</div>
                       </Button>
                     </div>
                   )

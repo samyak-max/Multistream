@@ -31,7 +31,7 @@ function StreamArea() {
         <>
             <div className="flex w-full flex-col px-10 py-3 gap-2">
                 <div className="flex gap-3">
-                    <Tabs defaultValue="single-view" onValueChange={(value) => {setActiveTab(value); setStreamScreen("1");}}>
+                    <Tabs defaultValue="single-view" onValueChange={(value) => {setActiveTab(value);}}>
                         <TabsList>
                             <TabsTrigger value="single-view">Single View</TabsTrigger>
                             <TabsTrigger value="double-view">Double View</TabsTrigger>

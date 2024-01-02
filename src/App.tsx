@@ -4,7 +4,7 @@ import StreamArea from './components/StreamArea'
 import { OAuthProvider } from './context/oAuthProvider'
 import { StreamProvider } from './context/streamContext'
 import { TopStreamProvider } from './context/topStreamContext'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function App() {
   // oAuth Context
@@ -23,7 +23,7 @@ function App() {
     updateYoutubeState(newState)
   }
 
-  // Stream Context
+  // Stream Screen Context
   const [stream1, updateStream1] = useState({
     streamId: "",
     platform: ""
@@ -57,7 +57,7 @@ function App() {
     updateStreamScreen(screen)
   }
 
-  // Top Stream Context
+  //Stream Context
   const [topTwitchStreams, updateTopTwitchStreams] = useState<object[]>([]);
   const [topYoutubeStreams, updateTopYoutubeStreams] = useState<object[]>([]);
   const [twitchLoading, updateTwitchLoading] = useState(true);
@@ -74,6 +74,7 @@ function App() {
   const setYoutubeLoading = (loading: boolean) => {
     updateYoutubeLoading(loading)
   }
+
   return (
     <>
       <OAuthProvider value={{twitchState, youtubeState, setTwitchState, setYoutubeState}}>
