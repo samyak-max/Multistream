@@ -148,7 +148,7 @@ function Header() {
             </Sheet>
             
             <div className="flex gap-2">
-            <Select defaultValue="youtube" onValueChange={(value) => setSelected(value)}>
+            <Select defaultValue="youtube" onValueChange={(value) => {setSelected(value);console.log(selected);}}>
             <SelectTrigger className="w-auto">
                 <SelectValue placeholder="Platform"/>
             </SelectTrigger>
@@ -159,7 +159,7 @@ function Header() {
                 </SelectGroup>
             </SelectContent>
             </Select>
-                <Input type="text" placeholder="Search.." className="w-80" onChange={(e) => setSearch(e.target.value)}/>
+                <Input type="text" placeholder="Search.." className="w-80" onChange={(e) => {setSearch(e.target.value);console.log(search);}}/>
                 <Button type="submit" size="icon"><Search/></Button>
             </div>
             <DropdownMenu>

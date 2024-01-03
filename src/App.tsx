@@ -4,7 +4,7 @@ import StreamArea from './components/StreamArea'
 import { OAuthProvider } from './context/oAuthProvider'
 import { StreamProvider } from './context/streamContext'
 import { TopStreamProvider } from './context/topStreamContext'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 function App() {
   // oAuth Context
