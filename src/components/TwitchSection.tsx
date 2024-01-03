@@ -14,7 +14,6 @@ type TwitchSectionProps = {
 function TwitchSection({signInWithTwitch, signOutWithTwitch, twitchChannels}: TwitchSectionProps) {
   const { setStream1, setStream2, setStream3, setStream4, streamScreen } = useStream();
   const { twitchLoading } = useTopStream();
-
   const updateStream = (streamId: string, platform: string) => {
     if (streamScreen === "1") {
       setStream1(streamId, platform);
@@ -42,7 +41,7 @@ function TwitchSection({signInWithTwitch, signOutWithTwitch, twitchChannels}: Tw
             <div>Loading...</div>
           ) : (
             <div>
-              <ScrollArea className='h-80 w-55 rounded-md border px-2'>
+              <ScrollArea className='h-64 w-55 rounded-md border px-2'>
                 {twitchChannels.map((channel, index) => {
                   return (
                     <div key={index} className='flex justify-start gap-2 items-center my-3'>

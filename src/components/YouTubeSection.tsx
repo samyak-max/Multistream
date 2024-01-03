@@ -1,51 +1,69 @@
 import { Youtube, Link } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { createClient } from '@supabase/supabase-js'
-import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { useStream } from '@/context/streamContext';
+import { useTopStream } from '@/context/topStreamContext';
 
-const youtubeSupabase = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZsa3dnYWF0Y3ltZHV2d251aG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDM1MjM4NTksImV4cCI6MjAxOTA5OTg1OX0.aeZTX5vtgMDjWrlOvoCnuqVxPICryGxZlKX8-wkLdPs')
+type YouTubeSectionProps = {
+  signInWithGoogle: () => void;
+  signOutWithGoogle: () => void;
+  youtubeChannels: any[];
+}
 
+function YouTubeSection({signInWithGoogle, signOutWithGoogle, youtubeChannels}: YouTubeSectionProps) {
+  const { setStream1, setStream2, setStream3, setStream4, streamScreen } = useStream();
+  const { youtubeLoading } = useTopStream();
 
-function YouTubeSection() {
-  const [youtubeToken, setYoutubeToken] = useState("")
-
-  useEffect(() => {
-    const subscription = youtubeSupabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === 'SIGNED_OUT') {
-          setYoutubeToken("")
-        } else if (session) {
-          setYoutubeToken(session?.provider_token  || "")
-        }
-      })
-
-    return () => {
-      subscription.data?.subscription.unsubscribe()
+  const updateStream = (streamId: string, platform: string) => {
+    if (streamScreen === "1") {
+      setStream1(streamId, platform);
+    } else if (streamScreen === "2") {
+      setStream2(streamId, platform);
+    } else if (streamScreen === "3") {
+      setStream3(streamId, platform);
+    } else if (streamScreen === "4") {
+      setStream4(streamId, platform);
     }
-  }, [])
-  
-  async function signInWithGoogle() {
-    const { data, error } = await youtubeSupabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-            scopes: "openid email profile https://www.googleapis.com/auth/youtube.readonly"
-        }
-    })
-    console.log(data, error)
   }
-  
-  async function signOutWithGoogle() {
-    const { error } = await youtubeSupabase.auth.signOut()
-    console.log(error)
-  }
+
   return (
     <>
+      <div className="flex gap-2 flex-col">
         <div className="text-lg flex gap-2 items-center">
             YouTube
             <Youtube color="#CD201F" />
             <Button variant="outline" size="icon" onClick={() => signInWithGoogle()}><Link color="green" /></Button>
-            <Button variant="outline" size="icon" onClick={() => console.log(youtubeToken)}><Link /></Button>
+            <Button variant="outline" size="icon" onClick={() => signOutWithGoogle()}><Link /></Button>
         </div>
+        <div>
+          {youtubeLoading ? (
+            <div>Loading...</div>
+          ) : (
+            <div>
+              <ScrollArea className='w-55 h-64 rounded-md border px-2'>
+                {youtubeChannels.map((channel, index) => {
+                  return (
+                    <div key={index} className='flex justify-start gap-2 items-center my-3'>
+                      <Button 
+                        className='w-full flex justify-start gap-2 h-full items-center border-0 py-1' 
+                        variant="outline"
+                        onClick={() => updateStream(channel.video_id, "youtube")}
+                      >
+                      <Avatar>
+                        <AvatarImage src={channel.channel_thumbnail} />
+                        <AvatarFallback>X</AvatarFallback>
+                      </Avatar>
+                      <div className="text-base">{channel.channel_name}</div>
+                      </Button>
+                    </div>
+                  )
+                })}
+              </ScrollArea>
+            </div>
+          )}
+        </div>
+      </div>
     </>
   )
 }

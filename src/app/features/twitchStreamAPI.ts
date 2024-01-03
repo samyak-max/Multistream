@@ -49,11 +49,10 @@ export default async function twitchAPIHandler(
             })  
             .then((response: AxiosResponse) => {
                 twitch.twitchChannels = response.data.data;
-                console.log(twitch.twitchChannels);
             });
         }
         catch (error) {
-            console.log("Client Id invalid", error);
+            console.log("Twitch Client Id invalid", error);
         }
         try {
             await axios.get(top_streams_endpoint, {
@@ -67,10 +66,10 @@ export default async function twitchAPIHandler(
             });
         }
         catch (error) {
-            console.log("Client Id invalid", error);
+            console.log("Twitch Client Id invalid", error);
         }
     } catch (error) {
-        console.log("Session token invalid", error);
+        console.log("Twitch Session token invalid", error);
     }
     return twitch;
 }

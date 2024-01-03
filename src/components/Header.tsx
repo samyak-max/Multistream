@@ -12,47 +12,86 @@ import { Separator } from "@/components/ui/separator"
 import { createClient } from '@supabase/supabase-js'
 import { useOAuth } from "@/context/oAuthProvider";
 import twitchAPIHandler from "../app/features/twitchStreamAPI";
+import youtubeAPIHandler from "../app/features/youtubeStreamAPI";
 import { useTopStream } from '@/context/topStreamContext';
+import youtubeTopStreamsAPIHandler from "../app/features/youtubeTopStreamsAPI"
+
 
 const anon_key = import.meta.env.VITE_SUPABASE_ANON_KEY
-const supabaseClient = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', anon_key || '')
+const supabaseClient = createClient('https://vlkwgaatcymduvwnuhmq.supabase.co', anon_key || '',)
 
 function Header() {
     const { setTheme } = useTheme();
     const [selected, setSelected] = useState("youtube");
     const [search, setSearch] = useState("");
 
-    const { twitchState, setTwitchState } = useOAuth();
-    const { setTopTwitchStreams, setTwitchLoading } = useTopStream();
+    const { twitchState, setTwitchState, youtubeState, setYoutubeState } = useOAuth();
+    const { setTopTwitchStreams, setTwitchLoading, setYoutubeLoading, setTopYoutubeStreams } = useTopStream();
     const [twitchChannels, setTwitchChannels] = useState<any[]>([]);
+    const [youtubeChannels, setYoutubeChannels] = useState<any[]>([]);
 
     useEffect(() => {
         const subscription = supabaseClient.auth.onAuthStateChange(
-        (event, session) => {   
+        (event, session) => {
             if (event === 'SIGNED_OUT') {
-            setTwitchState({ twitchToken: "", twitchUserId: "" })
+                console.log("Signed Out!")
             } else if (session) {
-            setTwitchState({ twitchToken: session.provider_token, twitchUserId: session.user.identities?.[0]?.id ?? '' })
+                if(session.user.app_metadata?.provider=='google') {
+                    localStorage.setItem('googleToken', JSON.stringify(session))
+                    setYoutubeState({ youtubeToken: session.provider_token, youtubeUserId: session.user.identities?.[0]?.id ?? '' })
+                }
+                else{
+                    localStorage.setItem('twitchToken', JSON.stringify(session))
+                    setTwitchState({ twitchToken: session.provider_token, twitchUserId: session.user.identities?.[0]?.id ?? '' })
+                }
             }
         })
-
         return () => {
         subscription.data?.subscription.unsubscribe()
         }
     }, [])
     
+    useEffect(() => {
+        if(localStorage.getItem('twitchToken')) {
+            const token = JSON.parse(localStorage.getItem('twitchToken') || '{}')
+            setTwitchState({ twitchToken: token.provider_token, twitchUserId: token.user.identities?.[0]?.id ?? '' })
+        }
+        if(localStorage.getItem('googleToken')) {
+            const token = JSON.parse(localStorage.getItem('googleToken') || '{}')
+            setYoutubeState({ youtubeToken: token.provider_token, youtubeUserId: token.user.identities?.[0]?.id ?? '' })
+        }
+    },[]);
 
     useEffect(() => {
         if (twitchState.twitchToken && twitchState.twitchUserId && !twitchChannels?.length) {
-        twitchAPIHandler(twitchState)
+            twitchAPIHandler(twitchState)
             .then((res) => {
-            setTwitchChannels(res.twitchChannels);
-            setTopTwitchStreams(res.twitchTopStreams);
-            setTwitchLoading(false);
+                setTwitchChannels(res.twitchChannels);
+                setTopTwitchStreams(res.twitchTopStreams);
+                setTwitchLoading(false);
             });
         }
     }, [twitchState.twitchToken, twitchState.twitchUserId])
+    
+    useEffect(() => {
+        if (youtubeState.youtubeToken && youtubeState.youtubeUserId) {
+            youtubeAPIHandler(youtubeState)
+            .then((res) => {
+                setYoutubeChannels(res ?? []);
+                setYoutubeLoading(false);
+                console.log(res);
+            })
+            .catch((err) => {console.log(err)});
+            youtubeTopStreamsAPIHandler(youtubeState)
+            .then((res) => {
+                setTopYoutubeStreams(res ?? []);
+                console.log(res);
+            })
+            .catch((err) => {console.log(err)});
+        }
+    },[youtubeState.youtubeToken, youtubeState.youtubeUserId])
 
+    //Sign In/Out Functions
     async function signInWithTwitch() {
         const { data, error } = await supabaseClient.auth.signInWithOAuth({
           provider: 'twitch',
@@ -64,7 +103,23 @@ function Header() {
     }
     async function signOutWithTwitch() {
         const { error } = await supabaseClient.auth.signOut()
+        localStorage.removeItem('twitchToken')
         console.log("Signed Out!", error);
+    }
+    async function signInWithGoogle() {
+        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                scopes: "openid email profile https://www.googleapis.com/auth/youtube.readonly"
+            }
+        })
+        console.log(data, error)
+      }
+      
+    async function signOutWithGoogle() {
+        const { error } = await supabaseClient.auth.signOut()
+        console.log(error)
+        localStorage.removeItem('googleToken')
     }
 
     return (
@@ -82,7 +137,7 @@ function Header() {
                 </SheetHeader>
                 <div className="flex flex-col gap-3 w-full mt-6">
                     <div className="">
-                        <YouTubeSection/>
+                        <YouTubeSection signInWithGoogle={signInWithGoogle} signOutWithGoogle={signOutWithGoogle} youtubeChannels={youtubeChannels}/>
                     </div>
                     <Separator/>  
                     <div className="w-full">
@@ -91,7 +146,7 @@ function Header() {
                 </div> 
             </SheetContent>
             </Sheet>
-
+            
             <div className="flex gap-2">
             <Select defaultValue="youtube" onValueChange={(value) => setSelected(value)}>
             <SelectTrigger className="w-auto">
