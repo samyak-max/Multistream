@@ -1,4 +1,5 @@
 import './App.css'
+import Footer from './components/Footer'
 import Header from './components/Header'
 import StreamArea from './components/StreamArea'
 import { OAuthProvider } from './context/oAuthProvider'
@@ -84,6 +85,7 @@ function App() {
         <div className="flex">
             <StreamArea/> 
         </div>
+        <Footer/>
       </TopStreamProvider>
       </StreamProvider>
       </OAuthProvider>
