@@ -34,7 +34,7 @@ function DoubleView() {
             <Skeleton className={`w-full h-full`}/>
           }
           {stream2.streamId !== "" &&
-            <TwitchChat channel={stream1.streamId} height="100%" width="100%" darkMode={theme==='dark'}/>
+            <TwitchChat channel={stream2.streamId} height="100%" width="100%" darkMode={theme==='dark'}/>
           }
           {stream2.streamId !== "" && stream2.platform === "youtube" &&
             <iframe src={`https://www.youtube.com/live_chat?v=${stream2.streamId}&embed_domain=localhost`} width="100%" height="100%"/>
