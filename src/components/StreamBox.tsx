@@ -13,7 +13,7 @@ function StreamBox({streamId, streamPlatform, chat }: Props) {
     const { theme } = useTheme();
     const twitchEndpoint = "https://www.twitch.tv/"+streamId;
     const youtubeEndpoint = "https://www.youtube.com/watch?v="+streamId;
-    const youtubeChatEndpoint = "https://www.youtube.com/live_chat?v="+streamId+"&embed_domain=localhost";
+    const youtubeChatEndpoint = "https://www.youtube.com/live_chat?v="+streamId+"&embed_domain=multistream-eta.vercel.app";
 
     return (
         <div className={`h-full w-full shadow-2xl ${streamPlatform === "twitch" ? 'shadow-[0px_0px_30px_0px_rgba(145,70,255,1);]' : streamPlatform === "youtube" ? 'shadow-[0px_0px_30px_0px_rgba(205,32,31,1);]' : ' shadow-[0px_0px_30px_0px_rgba(170,255,0,1);]'} rounded-md`}>

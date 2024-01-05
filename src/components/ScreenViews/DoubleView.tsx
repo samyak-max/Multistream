@@ -21,7 +21,7 @@ function DoubleView() {
             <TwitchChat channel={stream1.streamId} height="100%" width="100%" darkMode={theme==='dark'}/>
           }
           {stream1.streamId !== "" && stream1.platform === "youtube" &&
-            <iframe src={`https://www.youtube.com/live_chat?v=${stream1.streamId}&embed_domain=localhost`} width="100%" height="100%"/>
+            <iframe src={`https://www.youtube.com/live_chat?v=${stream1.streamId}&embed_domain=multistream-eta.vercel.app`} width="100%" height="100%"/>
           }
         </div>
       </div>
@@ -37,7 +37,7 @@ function DoubleView() {
             <TwitchChat channel={stream2.streamId} height="100%" width="100%" darkMode={theme==='dark'}/>
           }
           {stream2.streamId !== "" && stream2.platform === "youtube" &&
-            <iframe src={`https://www.youtube.com/live_chat?v=${stream2.streamId}&embed_domain=localhost`} width="100%" height="100%"/>
+            <iframe src={`https://www.youtube.com/live_chat?v=${stream2.streamId}&embed_domain=multistream-eta.vercel.app`} width="100%" height="100%"/>
           }
         </div>
       </div>
