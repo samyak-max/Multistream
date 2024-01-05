@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-const subscription_endpoint = "https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&mine=true&maxResults=5";
+const subscription_endpoint = "https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&mine=true&maxResults=10";
 const channel_endpoint = "https://www.googleapis.com/youtube/v3/search?eventType=live&type=video";
 
 let youtubeChannels: object[] = [];
